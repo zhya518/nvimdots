@@ -26,6 +26,9 @@ local lowerFirst = function(str)
 	return (str:gsub("^%u", string.lower))
 end
 local snakeToCamel = function(str)
+	if str == nil then
+		return ""
+	end
 	return (str:gsub("_(.)", function(c)
 		return c:upper()
 	end))

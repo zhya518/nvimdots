@@ -100,15 +100,29 @@ local function get_init_options_settings()
 		java = {
 			-- "home": "/usr/local/jdk-9.0.1",
 			autobuild = { enabled = false },
-			-- format = {
-			-- 	settings = {
-			-- 		-- Use Google Java style guidelines for formatting
-			-- 		-- To use, make sure to download the file from https://github.com/google/styleguide/blob/gh-pages/eclipse-java-google-style.xml
-			-- 		-- and place it in the ~/.local/share/eclipse directory
-			-- 		url = "~/.local/share/eclipse/eclipse-java-google-style.xml",
-			-- 		profile = "GoogleStyle",
-			-- 	},
-			-- },
+			project = {
+				sourcePaths = { "src/main/java", "src/test/java" },
+				outputPath = "target/classes",
+				referencedLibraries = {
+					include = { "lib/**/*.jar", "external-lib/**/*.jar" },
+					exclude = {},
+					sources = {
+						{ library = "xxx.jar", source = "xxx-source.jar" },
+					},
+				},
+				resourceFilters = {},
+				encoding = "SETDEFAULT", -- IGNORE, WARNING, SETDEFAULT
+			},
+			format = {
+				-- Use Google Java style guidelines for formatting
+				-- https://github.com/google/styleguide/blob/gh-pages/eclipse-java-google-style.xml
+				settings = {
+					url = "~/opt/java/eclipse-java-google-style.xml",
+					profile = "GoogleStyle",
+				},
+				onType = true,
+				enabled = true,
+			},
 			eclipse = { downloadSources = true },
 			inlayhints = {
 				parameterNames = {
@@ -229,14 +243,14 @@ end
 local function get_init_options_bundles()
 	local bundles = {}
 	-- java-debug-adapter
-	table.insert(
-		bundles,
-		vim.fn.glob(
-			env.HOME
-				.. "/.local/share/nvim/mason/packages/java-debug-adapter/extension/server/com.microsoft.java.debug.plugin-*.jar",
-			true
-		)
-	)
+	-- table.insert(
+	-- 	bundles,
+	-- 	vim.fn.glob(
+	-- 		env.HOME
+	-- 			.. "/.local/share/nvim/mason/packages/java-debug-adapter/extension/server/com.microsoft.java.debug.plugin-*.jar",
+	-- 		true
+	-- 	)
+	-- )
 	-- java-test installation
 	-- vim.list_extend(
 	-- 	bundles,
@@ -277,6 +291,11 @@ return {
 		get_jdtls_workspace_dir(),
 		get_jdtls_java_executable(),
 		get_jdtls_jvm_args(),
+		-- "-vmargs",
+		-- "-Dhttp.proxyHost=your.proxy.host",
+		-- "-Dhttp.proxyPort=your.proxy.port",
+		-- "-Dhttps.proxyHost=your.proxy.host",
+		-- "-Dhttps.proxyPort=your.proxy.port",
 	},
 	filetypes = { "java" },
 	root_dir = function(fname)
@@ -300,11 +319,12 @@ return {
 	end,
 	single_file_support = true,
 	init_options = {
-		workspace = get_jdtls_workspace_dir(),
-		jvm_args = {},
-		os_config = nil,
-		settings = get_init_options_settings(),
-		bundles = get_init_options_bundles(),
+		-- workspace = get_jdtls_workspace_dir(),
+		-- jvm_args = {},
+		-- os_config = nil,
+		settings = get_init_options_settings(), -- Java LS configuration settings
+		bundles = get_init_options_bundles(), -- a list of Java LS extensions
+		workspaceFolders = {}, -- a list of workspace folders (as URIs)
 	},
 	handlers = {
 		-- Due to an invalid protocol implementation in the jdtls we have to conform these to be spec compliant.

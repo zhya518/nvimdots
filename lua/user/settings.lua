@@ -84,28 +84,9 @@ settings["dap_deps"] = {
 -- Check the below link for all supported languages:
 -- https://github.com/nvim-treesitter/nvim-treesitter#supported-languages
 ---@type string[]
-settings["treesitter_deps"] = {
-	-- "bash",
-	-- "c",
-	-- "cpp",
-	-- "css",
-	"go",
-	"gomod",
-	-- "html",
-	-- "javascript",
-	-- "json",
-	-- "latex",
-	-- "lua",
-	-- "make",
-	-- "markdown",
-	-- "markdown_inline",
-	-- "python",
-	-- "rust",
-	-- "typescript",
-	-- "vimdoc",
-	-- "vue",
-	-- "yaml",
-}
+-- unused, you can edit core.settings.treesitter_deps
+-- recursively merge src into dst, cannot remove values
+settings["treesitter_deps"] = {}
 
 -- Set it to false if you want to turn off LSP Inlay Hints
 ---@type boolean

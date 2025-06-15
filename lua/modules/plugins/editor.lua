@@ -63,7 +63,8 @@ editor["smoka7/hop.nvim"] = {
 }
 editor["tzachar/local-highlight.nvim"] = {
 	lazy = true,
-	event = { "BufReadPost", "BufAdd", "BufNewFile" },
+	--event = { "BufReadPost", "BufAdd", "BufNewFile" },
+	event = { "BufAdd", "BufNewFile" },
 	config = require("editor.local-highlight"),
 }
 editor["brenoprata10/nvim-highlight-colors"] = {

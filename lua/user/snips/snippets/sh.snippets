@@ -1,3 +1,21 @@
+
+snippet mytee "tee body"
+    # EOF 增加单引号，body内变量引用不生效 
+    sudo tee ${1} <<-'EOF'
+        ${2}
+    EOF
+    sudo tee ${1} <<-EOF
+        ${2}
+    EOF
+
+snippet mycat "cat body"
+    cat <<EOF > ${1}
+        ${2}
+    EOF
+    cat <<-EOF | sudo tee ${1} > /dev/null
+        ${2}
+    EOF
+
 snippet list "bash list"
     ${1}=(apple banana cherry)
     array2=(elderberry fig)
@@ -159,3 +177,26 @@ snippet remote-cmd "bash remote exec cmd"
         $cmd
         echo "-------------------------"
     done < iplist.txt
+
+
+
+snippet case "bash switch"
+    case "$VAR" in
+        1) echo 1
+        ;;
+        2|3) echo 2 or 3
+        ;;
+        *) echo default
+        ;;
+    esac
+    get_port() {
+        local server="$1"
+        case "$server" in
+            "prod"*) echo 22 
+            ;;
+            "staging"*) echo 2222 
+            ;;
+            *) echo 80 
+            ;;
+        esac
+    }

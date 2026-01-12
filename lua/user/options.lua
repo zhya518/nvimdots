@@ -46,6 +46,32 @@ local leader_map = function()
 end
 leader_map()
 
+-- 在设置 clipboard 之后添加
+-- clipboard = "unnamedplus" 会导致列粘贴失效
+vim.api.nvim_create_autocmd("ModeChanged", {
+	pattern = "*",
+	callback = function()
+		local mode = vim.fn.mode()
+		-- 如果是可视块模式，禁用剪贴板同步
+		if mode == "v" or mode == "V" or mode == "\22" then
+			vim.opt.clipboard = ""
+		else
+			-- 其他模式恢复系统剪贴板
+			vim.opt.clipboard = "unnamedplus"
+		end
+	end,
+})
+
+-- 确保列粘贴时正确设置
+vim.api.nvim_create_autocmd("TextYankPost", {
+	callback = function()
+		-- 如果是可视块模式复制的，恢复剪贴板设置
+		if vim.v.event.regtype == "\22" then -- 可视块模式
+			vim.opt.clipboard = "unnamedplus"
+		end
+	end,
+})
+
 -- 启动打开目录树
 -- https://github.com/nvim-tree/nvim-tree.lua/wiki/Open-At-Startup
 local function open_nvim_tree(data)

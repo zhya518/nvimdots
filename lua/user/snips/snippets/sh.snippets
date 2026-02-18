@@ -1,0 +1,202 @@
+
+snippet mytee "tee body"
+    # EOF 增加单引号，body内变量引用不生效 
+    sudo tee ${1} <<-'EOF'
+        ${2}
+    EOF
+    sudo tee ${1} <<-EOF
+        ${2}
+    EOF
+
+snippet mycat "cat body"
+    cat <<EOF > ${1}
+        ${2}
+    EOF
+    cat <<-EOF | sudo tee ${1} > /dev/null
+        ${2}
+    EOF
+
+snippet list "bash list"
+    ${1}=(apple banana cherry)
+    array2=(elderberry fig)
+    # append array
+    ${1}+=("${array2[@]}")
+    # append elem
+    ${1}+=(date)
+    # traverse an array
+    for elem in ${${1}[@]}; do
+        echo $elem
+    done
+    findElem=findone
+    if [[ ! " ${${1}[@]} " =~ " ${findElem} " ]]; then
+        echo "invalid elem: $findElem"
+        return 1
+    fi
+
+snippet map "bash map"
+    declare -A ${1}
+    ${1}=( ["web"]="192.168.1.10" ["db"]="192.168.1.20" ["cache"]="192.168.1.30" )
+    ${1}["mq"]="192.168.1.60"
+    # traverse an map
+    for key in "${!${1}[@]}"; do
+        echo "$key: ${${1}[$key]}"
+    done
+    key="web"
+    if [[ -v ${1}[$key] ]]; then
+        val=${${1}[$key]}
+        echo "key:'$key', val:'$val'."
+    else
+        echo "key:'$key' not exists."
+    fi
+
+
+snippet slog "bash log"
+    LOG_LEVELS=("DEBUG" "INFO" "WARNING" "ERROR")
+    LOG() {
+        local timestamp=$(date +"%Y-%m-%d %H:%M:%S")
+        local line_number=${BASH_LINENO[0]}
+        local level=$1
+        shift
+        local message="$@"
+        echo "$timestamp [$level] [line: $line_number] - $message"
+    }
+
+
+snippet multi-thread "bash multi-thread"
+    #!/bin/bash
+    set -x  #开启调试模式
+    # Usage:
+    # History:
+    #
+    thread=$1   #设置线程数，在这里所谓的线程，其实就是几乎同时放入后台（使用&）执行的进程。
+    if [ "$1"x == ""x ]; then
+        thread=1
+    fi
+    tmp_fifofile=/tmp/$$.fifo       #脚本运行的当前进程ID号作为文件名
+    mkfifo $tmp_fifofile            #新建一个随机fifo管道文件
+    exec 6<>$tmp_fifofile           #定义文件描述符6指向这个fifo管道文件
+    rm $tmp_fifofile            #清空管道内容
+    #定义一个函数做为线程（子进程），该函数功能是ping测试
+    function func()
+    {
+        ping -c 3 $ip &>/dev/null && r=0 || r=1
+        if [ $r -eq 0 ]; then
+            echo "$ip ok"
+        else
+            echo "$ip failed"
+        fi
+        sleep 3
+    }
+    # for循环 往 fifo管道文件中写入$thread个空行
+    for ((i=0;i<$thread;i++));do
+        echo
+    done >&6
+    # 从ip.txt中读取ip
+    while read ip;do
+        read -u6        #从文件描述符6中读取行（实际指向fifo管道)
+        {
+            func
+            echo >&6    #再次往fifo管道文件中写入一个空行
+        } &
+    # {} 这部分语句被放入后台作为一个子进程执行，所以不必每次等待3秒后执行
+    #下一个,这部分的func几乎是同时完成的，当fifo中thread个空行读完后 while循环
+    # 继续等待 read 中读取fifo数据，当后台的thread个子进程等待3秒后，按次序
+    # 排队往fifo输入空行，这样fifo中又有了数据，while循环继续执行
+    done < ip.txt       #从ip.txt中读取数据
+    wait            #等到后台的进程都执行完毕
+    exec 6>&-       ##删除文件描述符6
+    exit 0
+
+snippet http-post "bash http-post"
+    #!/bin/bash
+    cat audit.txt | while read mobile
+    do
+    #mobile="86912087831"
+    body="{\"sequence\":1662109887947,\"infos\":[{\"mobile\":\"${mobile}\",\"app_id\":\"ikxd\"}],\"status\":0}"
+    echo $body
+    curl 'https://boss-proxy.ihago.cn/boss_proxy/ymicro/api?group_id=881' \
+      -H 'content-type: application/json' \
+      -H 'x-ymicro-api-method-name: Uaasadmin.AuditAccount' \
+      -H 'x-ymicro-api-service-name: net.ihago.ymicro.srv.uaasadmin' \
+      --data-raw ${body} \
+      --compressed
+    done
+
+snippet timestamp "bash timestamp"
+    timestamp=$(date "+%Y-%m-%d")
+    final_report="failed_logins_$timestamp.txt"
+
+snippet heredocs "bash multi line text"
+    email_body=$(cat <<EOF
+    Hello Team,
+    This is a reminder for the upcoming deployment at midnight.
+    Regards,
+    DevOps
+    EOF)
+    echo "$email_body" | mail -s "Deployment Reminder" team@example.com
+
+
+snippet exec_cmd "bash exec cmd"
+    exec_cmd() {
+        "$@"  # 执行传递给函数的命令
+        if [ $? -ne 0 ]; then  # 检查命令的返回状态
+            echo "Command failed: $@"  # 输出错误信息
+            exit 1  # 退出脚本，返回状态码 1
+        fi
+    }
+    exec_cmd ls -l
+
+snippet subshell "bash subshell"
+    # 子 shell 是执行命令而不影响父 shell 的子进程
+    (current_dir=$(pwd)
+    cd /tmp
+    echo "Now in $(pwd)"
+    )
+    echo "Back in $current_dir"
+
+
+snippet input-multi-values "bash input-multi-values"
+    while read -r key value; do
+        echo "key:$key, value:$value"
+    done < <(ls -l | awk 'NR>1{print $5,$9}')
+
+snippet remote-cmd "bash remote exec cmd"
+    #!/bin/bash
+    #./find.sh grep --color=yes -n err /data/yy/log/xh_mq_update_game_status_d/*.log
+    while read line
+    do
+        if [ -z "`echo $line |sed '/^#.*\|^$/d'`" ]; then
+            continue
+        fi
+        cmd="ssh -n -p 32200 "
+        cmd+=$line
+        cmd+=" "
+        cmd+=$*
+        echo $cmd
+        #$cmd >> log.log
+        $cmd
+        echo "-------------------------"
+    done < iplist.txt
+
+
+
+snippet case "bash switch"
+    case "$VAR" in
+        1) echo 1
+        ;;
+        2|3) echo 2 or 3
+        ;;
+        *) echo default
+        ;;
+    esac
+    get_port() {
+        local server="$1"
+        case "$server" in
+            "prod"*) echo 22 
+            ;;
+            "staging"*) echo 2222 
+            ;;
+            *) echo 80 
+            ;;
+        esac
+    }

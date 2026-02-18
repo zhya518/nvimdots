@@ -1,0 +1,500 @@
+snippet v "custom shorthand variable declaration"
+    ${1} := ${2}
+
+snippet vr "variable initialization"
+    var ${1:t} ${0:string}
+
+snippet var "variable declaration"
+    var ${1} ${2} = ${3}
+
+snippet vars "variables declaration"
+    var (
+        ${1} ${2} = ${3}
+    )
+
+snippet ap "append"
+    append(${1:slice}, ${0:value})
+
+snippet bl "bool"
+    bool
+
+snippet bt "byte"
+    byte
+
+snippet br "break"
+    break
+
+snippet ch "channel"
+    chan ${0:int}
+
+snippet cs "case"
+    case ${1:value}:
+        ${0:${VISUAL}}
+
+snippet co "constants with iota"
+    const (
+        ${1:NAME1} = iota
+        ${0:NAME2}
+    )
+
+snippet cn "continue"
+    continue
+
+snippet df "defer"
+    defer ${0:func}()
+
+snippet dfr "defer recover"
+    defer func() {
+        if err := recover(); err != nil {
+            ${0:${VISUAL}}
+        }
+    }()
+
+snippet im "import"
+    import (
+        "${1:package}"
+    )
+
+snippet in "interface"
+    interface{}
+
+snippet inf "full interface "
+    interface ${1:name} {
+        ${2:/* methods */}
+    }
+
+snippet if "if condition"
+    if $1 {
+        ${2:${VISUAL}}
+    }
+
+
+snippet ife "if else condition"
+    if $1 {
+        ${2:${VISUAL}}
+    } else {
+        ${0}
+    }
+
+snippet el "else"
+    else {
+        ${0:${VISUAL}}
+    }
+
+snippet ir "if error not nil, return err"
+    if err != nil {
+        return err
+    }
+    ${0}
+
+snippet f "false"
+    false
+
+snippet ft "fallthrough"
+    fallthrough
+
+snippet fl "float"
+    float32
+
+snippet f3 "float32"
+    float32
+
+snippet f6 "float64"
+    float64
+
+snippet for "for loop"
+    for ${1}{
+        ${0:${VISUAL}}
+    }
+
+snippet fori "for int loop"
+    for ${2:i} := 0; $2 < ${1:count}; $2${3:++} {
+        ${0:${VISUAL}}
+    }
+
+snippet forr "for range loop"
+    for ${1:e} := range ${2:collection} {
+        ${0:${VISUAL}}
+    }
+
+snippet fun "function"
+    func ${1:funcName}(${2}) ${3:error} {
+        ${4}
+    }
+    ${0}
+
+snippet fum "method"
+    func (${1:receiver} ${2:type}) ${3:funcName}(${4}) ${5:error} {
+        ${6}
+    }
+    ${0}
+
+snippet fumh "http handler function on receiver"
+    func (${1:receiver} ${2:type}) ${3:funcName}(${4:w} http.ResponseWriter, ${5:r} *http.Request) {
+        ${0:${VISUAL}}
+    }
+
+snippet lf "log printf"
+    log.Printf("%${1:s}", ${2:var})
+
+snippet lp "log println"
+    log.Println("${1}")
+
+snippet mk "make"
+    make(${1:[]string}, ${0:0})
+
+snippet mp "map"
+    map[${1:string}]${0:int}
+
+snippet main "func main()"
+    func main() {
+        ${1}
+    }
+    ${0}
+
+snippet nw "new"
+    new(${0:type})
+
+snippet pa "package"
+    package ${1:main}
+
+snippet pn "panic"
+    panic("${0:msg}")
+
+snippet pf "fmt.Printf()"
+    fmt.Printf("%${1:s}\n", ${2:var})
+
+snippet pl "fmt.Println()"
+    fmt.Println("${1:s}")
+
+snippet rn "range"
+    range ${0}
+
+snippet rt "return"
+    return ${0}
+
+snippet rs "result"
+    result
+
+snippet sl "select"
+    select {
+    case ${1:v1} := <-${2:chan1}
+        ${3}
+    default:
+        ${0}
+    }
+
+snippet sr "string"
+    string
+
+snippet st "struct"
+    struct ${1:name} {
+        ${2:/* data */}
+    }
+    ${0}
+
+snippet sw "switch"
+    switch ${1:var} {
+    case ${2:value1}:
+        ${3}
+    case ${4:value2}:
+        ${5}
+    default:
+        ${0}
+    }
+
+snippet ps "fmt.Sprintf"
+    fmt.Sprintf("%${1:s}", ${2:var})
+
+snippet t "true"
+    true
+
+snippet g "goroutine named function"
+    go ${1:funcName}(${0})
+
+snippet ga "goroutine anonymous function"
+    go func(${1} ${2:type}) {
+        ${3:/* code */}
+    }(${0})
+
+snippet test "test function"
+    func Test${1:name}(t *testing.T) {
+        ${0:${VISUAL}}
+    }
+
+snippet testt "table test function"
+    func Test${1:name}(t *testing.T) {
+        tests := []struct {
+            name string
+        }{
+            {
+                name: "${2:test name}",
+            },
+        }
+
+        for _, test := range tests {
+            t.Run(test.name, func(t *testing.T) {
+                ${0:${VISUAL}}
+            })
+        }
+    }
+
+snippet bench "benchmark function"
+    func Benchmark${1:name}(b *testing.B) {
+        for i := 0; i < b.N; i++ {
+            ${2}
+        }
+    }
+    ${0}
+
+snippet cl "composite literals"
+    type ${1:name} struct {
+        ${2:attrName} ${3:attrType}
+    }
+
+snippet om "if key in a map"
+    if ${1:value}, ok := ${2:map}[${3:key}]; ok == true {
+        ${4:/* code */}
+    }
+
+
+snippet gg "Grouped globals with anonymous struct"
+    var ${1:var} = struct{
+        ${2:name} ${3:type}
+    }{
+        $2: ${4:value},
+    }
+
+
+snippet ja "Marshalable json alias"
+    type ${1:parentType}Alias $1
+
+    func (p *$1) MarshalJSON() ([]byte, error) {
+        return json.Marshal(&struct{ *$1Alias }{(*$1Alias)(p)})
+    }
+
+
+snippet errwr "Error handling with fmt.Errorf"
+    if ${1}err != nil {
+        return fmt.Errorf("${2} %w", err)
+    }
+
+
+snippet gotestx "TestXxx"
+   // TestName 单元测试
+   // go test -run ''      # 执行所有测试。
+   // go test -run Foo     # 执行匹配 "Foo" 的顶层测试，例如 "TestFooBar"。
+   // go test -run Foo/A=  # 对于匹配 "Foo" 的顶层测试，执行其匹配 "A=" 的子测试。
+   // go test -run /A=1    # 执行所有匹配 "A=1" 的子测试。
+   func Test${1:Name}(t *testing.T) {
+       type args struct {
+           arg0 string
+       }
+       cases := []struct {
+           name    string
+           args    args
+           cb      func() error
+           wantErr bool
+       }{
+           {
+               name: "case0", 
+               args: args{
+                   arg0: "demo0",
+               },
+               wantErr: true,
+           },
+       }
+       // <setup code>
+       for _, tc := range cases {
+           t.Run(tc.name, func(t *testing.T) {
+               if err := tc.cb(); (err != nil) != tc.wantErr {
+                   t.Errorf("name:%v expect:%v,real:%v", tc.name, tc.wantErr, err)
+               }
+               t.Log("ok")
+               // 基准测试 
+               // t.Parallel()
+           })
+       }
+       // <tear-down code>
+   }
+
+snippet gotestbench "BenchmarkXxx"
+    // BenchmarkName 基准测试
+    // go test -run=none -bench=.
+    // go test -run=none -bench=. ./dir/
+    // go test -bench=Benchmarkxxx$
+    // go test -bench=. -cpu 1,2,4,8,12 -benchtime 3s
+    // go test -bench=. -cpuprofile cpu.out -memprofile mem.out
+    // go test -v -run=none -bench=. -count=10 -cpu=2,4,8,16,32,64,128,256,512 | tee bench.txt
+    //
+    // -run=none 或 -run=^$ 表示过滤掉单元测试
+    // -benchmem 可以提供每次操作分配内存的次数，以及每次操作分配的字节数
+    // -benchtime 每次执行的时间，并没有太大变化。一般来说这个值最好不要超过3秒，意义不大
+    // -timeout 测试时间如果超过t, panic,默认10分钟
+    // -count 运行测试次数，默认一次
+    // -cpuprofile=$FILE 收集 CPU 性能分析到 $FILE 文件
+    // -memprofile=$FILE,将内存性能分析写入到 $FILE 文件，-memprofilerate=N 调节采样频率为 1/N
+    // -blockprofile=$FILE,输出内部 goroutine 阻塞的性能分析文件数据到 $FILE
+    // -trace=trace.out, 跟踪是在程序执行期间收集的事件。它们给出了程序执行的时间视图，其中包含有关堆、GC、Goroutines、core的使用等详细信息。
+    //
+    // goroutine 数量的默认值为 GOMAXPROCS
+    // 增加非 CPU 受限（non-CPU-bound）基准测试的并行性，可以在 RunParallel 之前调用 SetParallelism
+    // （如 SetParallelism(2)，则 goroutine 数量为 2*GOMAXPROCS）
+    // StartTimer、StopTime 、ResetTimer
+    //
+    // go test -c -o fib.test 编译二进制执行文件
+    // ./fib.test -test.v -test.run=none -test.bench=.
+    //
+    // go get golang.org/x/perf/cmd/benchstat
+    // Benchstat 进行一组基准测试，计算稳定性
+    // go test -bench=Fib20 -count=10 ./examples/fib/ | tee old.txt
+    // benchstat old.txt
+    // benchstat old.txt new.txt
+    // benchstat bench.txt
+    //
+    func Benchmark${1:Name}(b *testing.B) {
+        // 4351 ns/op 平均每次迭代所消耗的纳秒数
+        // 32 B/op 平均每次迭代内存所分配的字节数
+        // 2 allocs/op 平均每次迭代的内存分配次数
+        //
+        // b.ReportAllocs在report中包含内存分配信息
+        b.ReportAllocs()
+        // b.ResetTimer是重置计时器，这样可以避免for循环之前的初始化代码的干扰
+        b.ResetTimer()
+
+        // b.SetParallelism(2) // goroutine数量为2*GOMAXPROCS
+        b.RunParallel(func(pb *testing.PB) {
+            for pb.Next() {
+                // TODO: ...
+            }
+        })
+        // or
+        for i:=0;i<b.N;i++{
+            // b.StopTimer()
+            // setup()
+            // b.StartTimer()
+            // function under test
+            fmt.Sprintf("%d",num)
+        }
+        // or
+        cases := []struct {
+            name    string
+        }{
+            {
+                name: "case0", 
+            },
+        }
+        // 测试n-1 并发读和 1 并发写的性能
+        for _, tc := range cases {
+            b.Run(tc.name, func(b *testing.B) {
+                var i int64
+                b.RunParallel(func(pb *testing.PB) {
+                    gid := int(atomic.AddInt64(&i, 1) - 1)
+                    if gid == 0 {
+                        for i := 0; pb.Next(); i++ {
+                            // 并发写
+                        }
+                    } else {
+                        for pb.Next() {
+                            // 并发读
+                        }
+                    }
+                }
+            })
+        }
+    }
+
+
+snippet gotestmain "TestMain"
+    // clientcenter "git.yy.com/ihago/client-center"
+    // json "github.com/json-iterator/go"
+    // 在调用 TestMain 时 , flag.Parse 并没有被调用。
+    // 如果 TestMain 依赖于 command-line 标志（包括 testing 包的标志），则应该显式地调用 flag.Parse。
+    // 注意，这里的依赖是指，若 TestMain 函数内需要用到 command-line 标志，则必须显式地调用 flag.Parse，否则不需要，因为 m.Run 中调用 flag.Parse
+    func TestMain(m *testing.M) {
+        // flag.Parse()
+        s, err := ymicro.InitService("uinfowrapper",
+            ymicro.YConfEnable(false))
+        if err != nil {
+            fmt.Println("InitService err: ", err.Error())
+            return
+        }
+        clientcenter.Init(s.Client())
+        os.Exit(m.Run())
+    }
+
+
+
+snippet gotestmainbench "BenchmarkXxx"
+    func main() {
+        benchmarkResult := testing.Benchmark(func(b *testing.B) {
+            templ := template.Must(template.New("test").Parse("Hello, {{.}}!"))
+            b.RunParallel(func(pb *testing.PB) {
+                var buf bytes.Buffer
+                for pb.Next() {
+                    buf.Reset()
+                    templ.Execute(&buf, "World")
+                }
+            })
+        })
+        // 提供了每次迭代操作所消耗资源的计算方法
+        // fmt.Printf("%8d\t%10d ns/op\t%10d B/op\t%10d allocs/op\n", benchmarkResult.N, benchmarkResult.NsPerOp(), benchmarkResult.AllocedBytesPerOp(), benchmarkResult.AllocsPerOp())
+        fmt.Printf("%s\t%s\n", benchmarkResult.String(), benchmarkResult.MemString())
+    }
+
+snippet gotesthttp "mockHTTP"
+    func mockServer() *httptest.Server {
+        //API调用处理函数
+        sendJSON := func(rw http.ResponseWriter, r *http.Request) {
+            u := struct {
+                Name string
+            }{
+                Name: "myname",
+            }
+            rw.Header().Set("Content-Type", "application/json")
+            rw.WriteHeader(http.StatusOK)
+            json.NewEncoder(rw).Encode(u)
+        }
+        //适配器转换
+        return httptest.NewServer(http.HandlerFunc(sendJSON))
+    }
+
+    func TestSendJSON(t *testing.T) {
+        //创建一个模拟的服务器
+        server := mockServer()
+        defer server.Close()
+        //Get请求发往模拟服务器的地址
+        resq, err := http.Get(server.URL)
+        if err != nil {
+            t.Fatal("创建Get失败")
+        }
+        defer resq.Body.Close()
+        log.Println("code:", resq.StatusCode)
+        json, err := ioutil.ReadAll(resq.Body)
+        if err != nil {
+            log.Fatal(err)
+        }
+        log.Printf("body:%s\n", json)
+    }
+
+    func TestHttptest(t *testing.T){
+        req,err:=http.NewRequest(http.MethodGet,"/sendjson",nil)
+        if err!=nil {
+            t.Fatal("创建Request失败")
+        }
+        rw:=httptest.NewRecorder()
+        http.DefaultServeMux.ServeHTTP(rw,req)
+        log.Println("code:",rw.Code)
+        log.Println("body:",rw.Body.String())
+    }
+
+snippet goflag "flag"
+    const (
+        maxDefault = 1000 * 1000
+    )
+    var (
+    max int
+    )
+    flag.IntVar(&max, "name", maxDefault, "usage")
+    flag.Parse()
+
